@@ -115,8 +115,8 @@ def convert_to_azw3(articles_dir):
 if __name__ == '__main__':
     print('=' * 10, 'start !!!', '=' * 10)
     articles = 'C:/Users/masiha/Desktop/dnt-1399-10-16/OPF/articles'
-    save_as_book = 'C:/Users/masiha/Desktop/dnt-1399-10-16/final_book_farsi_final_mm'
-    convert_articles_content(articles, save_as_book)
-    convert_to_azw3(save_as_book)
+    book_out_dir = 'C:/Users/masiha/Desktop/dnt-1399-10-16/final_book_farsi_final_mm'
+    convert_articles_content(articles, book_out_dir)
+    convert_to_azw3(book_out_dir)
     print('=' * 10, 'complete all tasks  !!!', '=' * 10)
 
