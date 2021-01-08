@@ -22,19 +22,15 @@ def get_article_files(soup_content):
 def get_articles_title(book):
     course_info = os.path.join(book, 'path.html')
     with open(course_info, mode='r', encoding='utf-8') as book:
-        ls = ['نقشه راه']
         soup = BeautifulSoup(book, 'html.parser')
         all_titles = soup.findAll('h2')
-        for title in all_titles:
-            this_title = str(title.text).replace(' ', '-').replace('.', '')
-            ls.append(this_title)
-        return ls
+        return [str(title.text).replace(' ', '-') for title in all_titles]
 
 
 def get_articles_content(art_dir):
     course_info = os.path.join(art_dir, 'path.html')
     with open(course_info, mode='r', encoding='utf-8') as course_info:
-        content = course_info.read().split('<h2>')
+        content = course_info.read().split('<h2>')[1:]
         return content
 
 
@@ -119,7 +115,7 @@ if __name__ == '__main__':
 
     print('=' * 10, 'start !!!', '=' * 10)
     articles = 'C:/Users/masiha/Desktop/dnt-1399-10-16/OPF/articles'
-    book_out_dir = 'C:/Users/masiha/Desktop/dnt-1399-10-16/final_book_farsi_final_mm'
+    book_out_dir = 'C:/Users/masiha/Desktop/dnt-1399-10-16/final_bbc2'
 
     if not os.path.exists(book_out_dir):
         os.mkdir(book_out_dir)
