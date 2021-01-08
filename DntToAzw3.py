@@ -14,12 +14,12 @@ def get_calibre_path():
     return None
 
 
-def get_course_files(soup_content):
+def get_article_files(soup_content):
     links = soup_content.find_all('a', href=True)
     return [item.get('href') for item in links]
 
 
-def get_course_titles(book):
+def get_articles_title(book):
     course_info = os.path.join(book, 'path.html')
     with open(course_info, mode='r', encoding='utf-8') as book:
         ls = ['نقشه راه']
@@ -29,6 +29,13 @@ def get_course_titles(book):
             this_title = str(title.text).replace(' ', '-').replace('.', '')
             ls.append(this_title)
         return ls
+
+
+def get_articles_content(art_dir):
+    course_info = os.path.join(art_dir, 'path.html')
+    with open(course_info, mode='r', encoding='utf-8') as course_info:
+        content = course_info.read().split('<h2>')
+        return content
 
 
 def body_section(book_title):
@@ -78,24 +85,20 @@ def write_book(courses, title, article_dir, save_dir):
     print('task  {0} complete'.format(title))
 
 
-def convert_articles_content(articles_dir, out_book_dir):
-    if not os.path.exists(out_book_dir):
-        os.mkdir(out_book_dir)
-    course_info = os.path.join(articles_dir, 'path.html')
-    with open(course_info, mode='r', encoding='utf-8') as course_info:
-        content = course_info.read().split('<h2>')
-        titles = get_course_titles(articles_dir)
-        for part in content:
-            try:
-                soup = BeautifulSoup(part, 'html.parser')
-                course_files = get_course_files(soup)
-                course_title = titles.pop(0)
-                write_book(course_files, course_title, articles_dir, out_book_dir)
-            except Exception as e:
-                print(e, 'error!!!')
+def merge_and_convert_articles_content_to_html(articles_dir, out_book_dir):
+    content = get_articles_content(articles_dir)
+    titles = get_articles_title(articles_dir)
+    for part in content:
+        try:
+            soup = BeautifulSoup(part, 'html.parser')
+            course_files = get_article_files(soup)
+            course_title = titles.pop(0)
+            write_book(course_files, course_title, articles_dir, out_book_dir)
+        except Exception as e:
+            print(e, 'error!!!')
 
 
-def convert_to_azw3(articles_dir):
+def convert_html_article_to_azw3(articles_dir):
     if get_calibre_path() is not None:
         html_book_files = os.listdir(articles_dir)
         for file in html_book_files:
@@ -113,9 +116,14 @@ def convert_to_azw3(articles_dir):
 
 
 if __name__ == '__main__':
+
     print('=' * 10, 'start !!!', '=' * 10)
     articles = 'C:/Users/masiha/Desktop/dnt-1399-10-16/OPF/articles'
     book_out_dir = 'C:/Users/masiha/Desktop/dnt-1399-10-16/final_book_farsi_final_mm'
-    convert_articles_content(articles, book_out_dir)
-    convert_to_azw3(book_out_dir)
+
+    if not os.path.exists(book_out_dir):
+        os.mkdir(book_out_dir)
+
+    merge_and_convert_articles_content_to_html(articles, book_out_dir)
+    convert_html_article_to_azw3(book_out_dir)
     print('=' * 10, 'complete all tasks  !!!', '=' * 10)
