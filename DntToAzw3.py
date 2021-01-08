@@ -47,7 +47,7 @@ def body_section(book_title):
             '''.format(book_title)
 
 
-def end_body():
+def end_body_section():
     return '''
                 </body>
                 </html>
@@ -60,25 +60,25 @@ def write_book(courses, title, article_dir, save_dir):
     course_file_name = '{0}.html'.format(title)
     write_mode = False
     new_course = os.path.join(save_dir, course_file_name)
-    course_file = open(new_course, 'w', encoding='utf-8')
-    course_file.write(body_section(title))
-    for course in courses:
-        if not course.endswith('.html') or title is None:
-            continue
-        with open(os.path.join(article_dir, course), 'r', encoding='utf-8') as book_content:
-            for line in book_content.readlines():
-                this_line = str(line).strip()
-                if comment_section in this_line:
-                    write_mode = False
-                    course_file.write('<br><br><br>')
-                    break
-                if start_body_section in this_line:
-                    write_mode = True
-                if write_mode:
-                    course_file.write(this_line + '\n')
-    course_file.write(end_body())
-    course_file.close()
-    print('task  {0} complete'.format(title))
+
+    with open(new_course, 'w', encoding='utf-8') as file:
+        file.write(body_section(title))
+        for course in courses:
+            if not course.endswith('.html') or title is None:
+                continue
+            with open(os.path.join(article_dir, course), 'r', encoding='utf-8') as book_content:
+                for line in book_content.readlines():
+                    this_line = str(line).strip()
+                    if comment_section in this_line:
+                        write_mode = False
+                        file.write('<br><br><br>')
+                        break
+                    if start_body_section in this_line:
+                        write_mode = True
+                    if write_mode:
+                        file.write(this_line + '\n')
+        file.write(end_body_section())
+        print('task  {0} complete'.format(title))
 
 
 def merge_and_convert_articles_content_to_html(articles_dir, out_book_dir):
@@ -115,7 +115,7 @@ if __name__ == '__main__':
 
     print('=' * 10, 'start !!!', '=' * 10)
     articles = 'C:/Users/masiha/Desktop/dnt-1399-10-16/OPF/articles'
-    book_out_dir = 'C:/Users/masiha/Desktop/dnt-1399-10-16/final_bbc2'
+    book_out_dir = 'C:/Users/masiha/Desktop/dnt-1399-10-16/final_bbc2000'
 
     if not os.path.exists(book_out_dir):
         os.mkdir(book_out_dir)
