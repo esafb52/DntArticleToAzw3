@@ -21,9 +21,9 @@ def get_course_files(soup_content):
 
 def get_course_titles(book):
     course_info = os.path.join(book, 'path.html')
-    with open(course_info, mode='r', encoding='utf-8') as book_title:
+    with open(course_info, mode='r', encoding='utf-8') as book:
         ls = ['نقشه راه']
-        soup = BeautifulSoup(book_title, 'html.parser')
+        soup = BeautifulSoup(book, 'html.parser')
         all_titles = soup.findAll('h2')
         for title in all_titles:
             this_title = str(title.text).replace(' ', '-').replace('.', '')
@@ -51,12 +51,12 @@ def end_body():
            '''
 
 
-def write_book(courses, title, article_dir, course_out_dir):
+def write_book(courses, title, article_dir, save_dir):
     start_body_section = "class='main'"
     comment_section = '<h3>نظرات</h3>'
     course_file_name = '{0}.html'.format(title)
     write_mode = False
-    new_course = os.path.join(course_out_dir, course_file_name)
+    new_course = os.path.join(save_dir, course_file_name)
     course_file = open(new_course, 'w', encoding='utf-8')
     course_file.write(body_section(title))
     for course in courses:
@@ -119,4 +119,3 @@ if __name__ == '__main__':
     convert_articles_content(articles, book_out_dir)
     convert_to_azw3(book_out_dir)
     print('=' * 10, 'complete all tasks  !!!', '=' * 10)
-
